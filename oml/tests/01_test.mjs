@@ -128,3 +128,8 @@ Deno.test("01_test #13", () => {
     let result = run("`abc``def`");
     asst.assertEquals(result, "abc`def");
 });
+
+Deno.test("01_test #14", () => {
+    let result = run("(define a `abc`)(define b `xyz`)`${a}-${b}`");
+    asst.assertEquals(result, "abc-xyz");
+});

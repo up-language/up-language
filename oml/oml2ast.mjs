@@ -115,8 +115,8 @@ function read_sexp(code, exp) {
       return token;
     case "`":
       token = token.replace(/(^`|`$)/g, "");
-      token = token.replace(/(``)/g, "`");
-      return token;
+      token = token.replace(/(``)/g, "${'`'}");
+      return ["@", "`" + token + "`"];
     case "@":
       token = token.replace(/(^@|@$)/g, "");
       token = token.replace(/(@@)/g, "@");
