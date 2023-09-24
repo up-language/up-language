@@ -1,0 +1,2 @@
+include ':global_lbrary_8'
+project(':global_lbrary_8').projectDir = new File('C:/ProgramData/.repo/home/common/.java/global.library.8')

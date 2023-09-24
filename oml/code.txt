@@ -1,0 +1,83 @@
+(defun add2 (a b) (+ a b]
+(print (add2 11 22]
+(print (* 5 (+ 2 3) 10]
+(defvar x (add2 100 23]
+(defun add_x (n) (+ n x]
+(print (add_x 10]
+(print (let [(x 11) (y 22)] (+ x y]]
+(print (let* [(x 11) (y 22)] (+ x y]]
+(define (fact x)
+  (do* ((n 2 (+ 1 n)) (rlt 1))
+       ((< x n) rlt)
+    (set! rlt (* rlt n))))
+(print (fact 4))
+(define (fact2 x)
+  (do ((n 2 (+ 1 n)) (rlt 1))
+      ((< x n) rlt)
+    (set! rlt (* rlt n))))
+(print (fact2 4))
+(defun dummy1 ()
+  (define a 22)
+  (defvar b 33)
+  (print (+ a b))
+  )
+(dummy1)
+(defun dummy2 ()
+  [define (my_add2 a b) (+ a b]
+  (print (my_add2 33 44]
+(dummy2)
+(print (* 2 3]
+(print (+ 2 null undefined 3]
+(print "abc")
+(print (. 11 undefined null "22"))
+(print (+ 11 undefined null "22"))
+(print "abc\nxyz")
+(print (. 11 undefined null "22"))
+
+(print (if "abc" "ok" "ng"]
+(print (if "" "ok" "ng"]
+(print (if "" "ok" "ng"]
+(print (if (< 1 2) "ok" "ng"]
+(print (if 1 "ok" "ng"]
+(print (if 0 "ok" "ng"]
+(begin
+  (define x 20)
+  (print (1 x 3]
+
+(print { :key1 123 :key2 ("abc" undefined true false)})
+(print (if true "ok" "ng"]
+(print (if false "ok" "ng"]
+
+(print (equal ("a" 1.5 undefined) ("a" 1.5 undefined)))
+(print (equal ("a" 1.5 undefined) ("a" 1.5 null)))
+(print (equal undefined null]
+
+(print (list 11 22 33 ? (:key2 1.23) (:key1 true) (:key3 undefined]
+(print (equal
+  [list 11 22 33 ? (:key2 1.23) (:key1 true) (:key3 undefined]
+  [list 11 22 33 ? (:key2 1.23) (:key1 false) (:key3 undefined]]
+
+(begin
+  (define x 123)
+  (case x
+    [ -1
+      (console.log "(case1)")
+      1 ]
+    [ else
+      (console.log "(case2)")
+      2 ]
+    ]
+
+(begin
+  (define x (11 22 33 ? :key1 (:key2 "abc")))
+  (case x
+    [ (11 22 33 ? :key1 (:key2 "xyz"))
+      (console.log "(case1)")
+      1 ]
+    [ (11 22 33 ? :key1 (:key2 "abc"))
+      (console.log "(case2)")
+      2 ]
+    [ else
+      (console.log "(case3)")
+      3 ]
+    ]

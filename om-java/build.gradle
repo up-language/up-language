@@ -1,0 +1,88 @@
+plugins {
+    //id 'java'
+    id 'application'
+    id 'java-library'
+    id 'com.github.johnrengelman.shadow' version '7.+'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+}
+
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+
+repositories {
+    mavenCentral()
+}
+
+def urlFile = { url ->
+    def parts = url.split("/")
+    def lastPart = parts[-1]
+    //println lastPart
+    def filePath = "$buildDir/download/${lastPart}"
+    File file = new File(filePath)
+    file.parentFile.mkdirs()
+    if (!file.exists()) file.delete()
+    println("Downloading from ${url}")
+    println("  to ${filePath}")
+    new URL(url).withInputStream { downloadStream ->
+        file.withOutputStream { fileOut ->
+            fileOut << downloadStream
+        }
+    }
+    files(file.absolutePath)
+}
+
+dependencies {
+    //implementation urlFile('https://github.com/javacommons/java.library/releases/download/jar/my.library.jar')
+    implementation project(':global_lbrary_8')
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
+    implementation 'com.google.guava:guava:31.1-jre'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-cbor
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.14.2'
+    // https://mvnrepository.com/artifact/com.upokecenter/cbor
+    //implementation 'com.upokecenter:cbor:4.5.2'
+    // https://mvnrepository.com/artifact/commons-cli/commons-cli
+    implementation 'commons-cli:commons-cli:1.5.0'
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-io
+    //implementation 'org.apache.commons:commons-io:1.3.2'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-smile
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.14.2'
+    // https://search.maven.org/artifact/com.amazon.ion/ion-java/1.9.5/jar?eh=
+    implementation 'com.amazon.ion:ion-java:1.9.5'
+    // https://mvnrepository.com/artifact/org.eclipse.swt/org.eclipse.swt.win32.win32.x86_64
+    implementation 'org.eclipse.swt:org.eclipse.swt.win32.win32.x86_64:4.3'
+}
+
+application {
+    mainClass = 'global.Main'
+    //mainClass = 'swt.test.MySwtApp'
+}
+
+//tasks.named('test') {
+//    useJUnitPlatform()
+//}
+test {
+  // JUnit platform を使う設定
+  useJUnitPlatform()
+  testLogging {
+    // テスト時の標準出力と標準エラー出力を表示する
+    showStandardStreams true
+    // イベントを出力する (TestLogEvent)
+    events 'started', 'skipped', 'passed', 'failed'
+    // 例外発生時の出力設定 (TestExceptionFormat)
+    exceptionFormat 'full'
+  }
+}
+
+task myRun(type: JavaExec) {
+    group = 'application'
+    classpath = files(shadowJar.archiveFile)
+    main = 'global.Main'
+    //main = 'swt.test.MySwtApp'
+    args = ['arg1', 'arg2']
+}
+myRun.dependsOn shadowJar
