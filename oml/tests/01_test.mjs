@@ -123,3 +123,8 @@ Deno.test("01_test #12", () => {
     result = ast2oml(result);
     asst.assertEquals(result, `"golf"`);
 });
+
+Deno.test("01_test #13", () => {
+    let result = run("`abc``def`");
+    asst.assertEquals(result, "abc`def");
+});
