@@ -80,3 +80,29 @@ Deno.test("01_test #8", () => {
     result = ast2oml(result);
     asst.assertEquals(result, `"baseball"`);
 });
+
+Deno.test("01_test #9", () => {
+    let result = exec(`
+        (define count 0)
+        (dolist (x person.hobbies)
+          (print x)
+          [set! count (+ 1 count]
+        ]
+        count
+        `);
+    //result = ast2oml(result);
+    asst.assertEquals(result, 2);
+});
+
+Deno.test("01_test #9", () => {
+    let result = exec(`
+        (define count 0)
+        (dotimes (x 3)
+          (print x)
+          [set! count (+ 1 count]
+        ]
+        count
+        `);
+    //result = ast2oml(result);
+    asst.assertEquals(result, 3);
+});

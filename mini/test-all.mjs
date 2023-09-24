@@ -1,5 +1,5 @@
-import { code2ary } from "https://deno.land/x/up_lang/code2ary.mjs";
-import { miniMAL } from "https://deno.land/x/up_lang/miniMAL.mjs";
+import { code2ary } from "https://deno.land/x/up_lang/mini/code2ary.mjs";
+import { miniMAL } from "https://deno.land/x/up_lang/mini/miniMAL.mjs";
 
 let code = Deno.readTextFileSync("code.txt");
 
