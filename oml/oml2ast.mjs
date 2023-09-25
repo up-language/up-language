@@ -1,5 +1,5 @@
+/*
 function tokenize(str) {
-  //let re = /[\s,]*(['?()\[\]]|{[^}]*}|"(?:\\.|[^\\"])*"|@(?:@@|[^@])*@|`(?:``|[^`])*`|;.*|#.*|[^\s,()\[\]'?"`;@{]*)/g;
   let re = /[\s,]*(['()\[\]]|{[^}]*}|"(?:\\.|[^\\"])*"|@(?:@@|[^@])*@|`(?:``|[^`])*`|;.*|#.*|[^\s,()\[\]'"`;@{]*)/g;
   let result = [];
   let token;
@@ -10,6 +10,36 @@ function tokenize(str) {
     if (isFinite(token)) token = parseFloat(token, 10);
     result.push(token);
   }
+  return result;
+}
+*/
+
+function tokenize(str) {
+  //console.log(`str.length=${str.length}`);
+  let re = /[\s,]*(['()\[\]]|{[^}]*}|"(?:\\.|[^\\"])*"|@(?:@@|[^@])*@|`(?:``|[^`])*`|;.*|#.*|[^\s,()\[\]'"`;@{]*)/g;
+  let lastIndex = -1;
+  let result = [];
+  const matches = str.matchAll(re);
+  for (const match of matches) {
+    /*
+    console.log(
+      `Found ${match[0]} start=${match.index} end=${
+        match.index + match[0].length
+      }.`,
+    );
+    */
+    lastIndex = match.index + match[0].length;
+    let token = match[1];
+    if (token === "") continue;
+    if (token === '\r') continue;
+    if (token === '\n') continue;
+    if (token[0] === ";") continue;
+    if (token[0] === "#") continue;
+    if (token[0] === "{") continue;
+    if (isFinite(token)) token = parseFloat(token, 10);
+    result.push(token);
+  }
+  if (lastIndex !== str.length) throw "Could not parse entire text.";
   return result;
 }
 
