@@ -20,4 +20,4 @@ let ast = oml2ast(dat);
 //console.log(ast);
 
 let result = exec(dat);
-console.log(result);
+//console.log(result);
