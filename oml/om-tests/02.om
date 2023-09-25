@@ -1,1 +1,2 @@
+#! /usr/bin/env om
 [print [+ 11 22]]
