@@ -1,0 +1,8 @@
+(dotimes 3
+ (print $index)
+ )
+
+(define count 5)
+(dotimes count
+ (print $index)
+ )

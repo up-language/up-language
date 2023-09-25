@@ -1,0 +1,15 @@
+[ "04.om" ]
+ [OML] (dotimes 3 (print $index))
+0
+1
+2
+==> null
+ [OML] (define count 5)
+==> 5
+ [OML] (dotimes count (print $index))
+0
+1
+2
+3
+4
+==> null

@@ -156,7 +156,7 @@ function compile_ast(ast) {
         }
         case "dotimes": {
             let ast1 = ast[1];
-            if (!common.is_array(ast1) || common.is_quoted(ast1))
+            if (common.is_id(ast1) || !common.is_array(ast1))
                 ast1 = [common.id("$index"), ast1];
             else if (ast1.length < 2)
                 throw new Error("syntax error");
