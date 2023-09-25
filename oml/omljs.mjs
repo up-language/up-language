@@ -504,6 +504,7 @@ export function omljs() {
                             console.log("==> (" + (tm2 - tm1) + " ms)");
                             console.log(val);
                         } else {
+                            console.log("==>");
                             console.log(val);
                         }
                     }
