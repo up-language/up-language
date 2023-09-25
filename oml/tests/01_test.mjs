@@ -11,7 +11,7 @@ import { exec, run } from "../omljs.mjs";
 
 Deno.test("01_test #1", () => {
     let result = exec(`
-    (+ 11 22]
+    (+ 11 { this is comment } 22]
     `);
     //print(result);
     asst.assertEquals(result, 33);
@@ -35,7 +35,7 @@ Deno.test("01_test #3", () => {
 
 Deno.test("01_test #4", () => {
     let result = exec(`
-    {:x 123}
+    (struct :x 123)
     `);
     result = ast2oml(result);
     asst.assertEquals(result, `(struct "x" 123)`);

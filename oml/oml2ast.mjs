@@ -1,6 +1,5 @@
 function tokenize(str) {
-  //let re = /[\s,]*([()\[\]{}']|"(?:\\.|[^\\"])*"|@(?:@@|[^@])*@|`(?:``|[^`])*`|;.*|#.*|[^\s,()\[\]{}'"`;@]*)/g;
-  let re = /[\s,]*([()\[\]{}]|"(?:\\.|[^\\"])*"|@(?:@@|[^@])*@|'(?:''|[^'])*'|`(?:``|[^`])*`|;.*|#.*|[^\s,()\[\]{}'"`;@]*)/g;
+  let re = /[\s,]*([()\[\]]|{[^}]*}|"(?:\\.|[^\\"])*"|@(?:@@|[^@])*@|'(?:''|[^'])*'|`(?:``|[^`])*`|;.*|#.*|[^\s,()\[\]'"`;@{]*)/g;
   let result = [];
   let token;
   while ((token = re.exec(str)[1]) !== "") {
@@ -16,6 +15,7 @@ function tokenize(str) {
 function read_token(code, exp) {
   if (code.length === 0) return undefined;
   let token = code.shift();
+  if (typeof(token)==="string" && token.startsWith("{")) return read_token(code, exp);
   exp.push(token);
   return token;
 }
