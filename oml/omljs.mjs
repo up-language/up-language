@@ -318,7 +318,7 @@ function compile_ast(ast) {
         case "while": {
             let condition = compile_ast(ast[1]);
             if (common.to_id(ast[0]) === "until")
-                condition = "!" + condition;
+                condition = "!(" + condition + ")";
             return ("((function(){while(" +
                 condition +
                 "){" +
