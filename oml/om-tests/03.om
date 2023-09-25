@@ -1,5 +1,5 @@
-(define count 3) {count に 3 を代入}
-(while @count > 0@ {count が 0 より大きい間}
- (console.log `count=${count}`) {count を表示}
- @count--@ {count をデクリメント}
+(define count 3) {* count に 3 を代入 *}
+(while @count > 0@ {* count が 0 より大きい間 *}
+ (console.log `count=${count}`) {* count を表示 *}
+ @count--@ {* count をデクリメント *}
  )
