@@ -384,12 +384,12 @@ function insert_op(op, rest) {
 
 function compile_do(ast) {
     let ast1 = ast[1];
-    let parallel = ast[0] === "do";
+    let parallel = common.to_id(ast[0]) === "do";
     let ast1_len = ast1.length;
     let ast1_vars = [];
     if (parallel) {
         ast1_vars.push("__do__");
-        ast1_vars.push("new Array(" + ast1_len + ").fill(null)");
+        ast1_vars.push(["@", "new Array(" + ast1_len + ").fill(null)"]);
     }
     ast1.forEach((x) => {
         ast1_vars.push(x[0]);
@@ -403,13 +403,13 @@ function compile_do(ast) {
         ast1.forEach((x, i) => {
             if (x.length < 3)
                 return;
-            let next_step = [id("set!"), "__do__[" + i + "]", x[2]];
+            let next_step = [common.id("set!"), ["@", "__do__[" + i + "]"], x[2]];
             until_ast.push(next_step);
         });
         ast1.forEach((x, i) => {
             if (x.length < 3)
                 return;
-            let next_step = [id("set!"), x[0], "__do__[" + i + "]"];
+            let next_step = [common.id("set!"), x[0], ["@", "__do__[" + i + "]"]];
             until_ast.push(next_step);
         });
     }
