@@ -146,3 +146,16 @@ Deno.test("01_test #15", () => {
     //result = ast2oml(result);
     asst.assertEquals(result, 6);
 });
+
+Deno.test("01_test #16", () => {
+    let result = run(
+        "(do* [(x 1 (+ x 1))" + "\n" +
+        "      (result 0]" + "\n" +
+        "     [(> x 3) result]" + "\n" +
+        "     (print `x=${x}`)" + "\n" +
+        "     [set! result (+ result x]" + "\n" +
+        "     (print `result=${result}`)" + "\n"
+        );
+    //result = ast2oml(result);
+    asst.assertEquals(result, 6);
+});
