@@ -1,0 +1,8 @@
+[ "03.om" ]
+ [OML] (define count 3)
+==> 3
+ [OML] (while @count > 0@ (console.log `count=${count}`) @count--@)
+count=3
+count=2
+count=1
+==> null
