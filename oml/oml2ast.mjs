@@ -1,11 +1,11 @@
 function tokenize(str) {
-  let re = /[\s,]*([()\[\]]|{[^}]*}|"(?:\\.|[^\\"])*"|@(?:@@|[^@])*@|'(?:''|[^'])*'|`(?:``|[^`])*`|;.*|#.*|[^\s,()\[\]'"`;@{]*)/g;
+  let re = /[\s,]*(['?()\[\]]|{[^}]*}|"(?:\\.|[^\\"])*"|@(?:@@|[^@])*@|`(?:``|[^`])*`|;.*|#.*|[^\s,()\[\]'?"`;@{]*)/g;
   let result = [];
   let token;
   while ((token = re.exec(str)[1]) !== "") {
     if (token[0] === ";") continue;
     if (token[0] === "#") continue;
-    //if (token.match(/^-?[0-9][0-9.]*$/)) token = parseFloat(token, 10);
+    if (token[0] === "{") continue;
     if (isFinite(token)) token = parseFloat(token, 10);
     result.push(token);
   }
@@ -15,7 +15,7 @@ function tokenize(str) {
 function read_token(code, exp) {
   if (code.length === 0) return undefined;
   let token = code.shift();
-  if (typeof(token)==="string" && token.startsWith("{")) return read_token(code, exp);
+  //if (typeof(token)==="string" && token.startsWith("{")) return read_token(code, exp);
   exp.push(token);
   return token;
 }
@@ -32,8 +32,14 @@ function read_list(code, exp, ch) {
         break;
       } else if (ast === ")") {
       break;
+    } else if (ast === "?") {
+      let key = read_sexp(code, exp);
+      console.log(`key=${key}`);
+      let val = read_sexp(code, exp);
+      console.log(`val=${val}`);
+      result[key] = val;
     }
-    result.push(ast);
+    if (ast !== "?") result.push(ast);
   }
   return result;
 }
@@ -98,6 +104,9 @@ function read_sexp(code, exp) {
   }
   let ch = token[0];
   switch (ch) {
+    case "'":
+      let ast = read_sexp(code, exp);
+      return ["`", ast];
     case "(":
     case "[":
       let lst = read_list(code, exp, ch);
@@ -105,18 +114,19 @@ function read_sexp(code, exp) {
     case ")":
     case "]":
     case ".":
-          return ch;
-    case "{":
-      return read_struct(code, exp);
-    case "}":
-      return ch;
+    case "?":
+        return ch;
+    //case "{":
+    //  return read_struct(code, exp);
+    //case "}":
+    //  return ch;
     case '"':
       token = JSON.parse(token);
       return token;
-    case "'":
-      token = token.replace(/(^'|'$)/g, "");
-      token = token.replace(/('')/g, "'");
-      return token;
+    //case "'":
+    //  token = token.replace(/(^'|'$)/g, "");
+    //  token = token.replace(/('')/g, "'");
+    //  return token;
     case "`":
       token = token.replace(/(^`|`$)/g, "");
       token = token.replace(/(``)/g, "${'`'}");
@@ -188,20 +198,21 @@ export function ast2oml(ast) {
   if ((typeof ast) === "string") return JSON.stringify(ast);
   if ((typeof ast) === "boolean") return JSON.stringify(ast);
   if (ast instanceof Array) {
-    let result = "(list";
+    let result = "(";
     for (let i = 0; i < ast.length; i++) {
-      /*if (i > 0)*/ result += " ";
+      if (i > 0) result += " ";
       result += ast2oml(ast[i]);
     }
-    result += ")";
-    /*
+    //result += ")";
+    
     let keys = Object.keys(ast);
+    console.log(`keys=${JSON.stringify(keys)}`);
     let re = /^[0-9]+/;
     keys = keys.filter(key => !re.test(key));
     keys.sort();
     if (keys.length > 0) {
-      if (ast.length > 0) result += " ";
-      result += "?";
+      //if (ast.length > 0) result += " ";
+      result += " ?";
       for (let i=0; i<keys.length; i++) {
         let key = keys[i];
         result += " (";
@@ -212,7 +223,7 @@ export function ast2oml(ast) {
       }
     }
     result += " )";
-    */
+    
     return result;
   } else {
     let result = "(struct";

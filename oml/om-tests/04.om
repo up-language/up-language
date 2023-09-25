@@ -1,8 +1,16 @@
 (dotimes 3
- (print $index)
- )
+ (print $index .
 
 (define count 5)
 (dotimes count
  (print $index)
- )
+ .
+
+(define lst (list 10 20 30))
+(dolist lst
+ (print $item)
+ .
+
+(dolist '(100 200 300)
+ (print $item)
+ .
