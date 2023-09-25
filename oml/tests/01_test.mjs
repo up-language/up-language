@@ -133,3 +133,16 @@ Deno.test("01_test #14", () => {
     let result = run("(define a `abc`)(define b `xyz`)`${a}-${b}`");
     asst.assertEquals(result, "abc-xyz");
 });
+
+Deno.test("01_test #15", () => {
+    let result = run(
+        "(do [(x 1 (+ x 1))" + "\n" +
+        "     (result 0]" + "\n" +
+        "    [(<= x 5) result]" + "\n" +
+        "    (print `x=${x}`)" + "\n" +
+        "    [set! result (+ result x]" + "\n" +
+        "    (print `result=${result}`)" + "\n"
+        );
+    //result = ast2oml(result);
+    asst.assertEquals(result, 3);
+});
