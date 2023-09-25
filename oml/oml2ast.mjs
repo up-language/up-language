@@ -34,13 +34,15 @@ function read_list(code, exp, ch) {
       break;
     } else if (ast === "?") {
       let key = read_sexp(code, exp);
-      console.log(`key=${key}`);
+      //console.log(`key=${key}`);
       let val = read_sexp(code, exp);
-      console.log(`val=${val}`);
+      //console.log(`val=${val}`);
       result[key] = val;
     }
     if (ast !== "?") result.push(ast);
   }
+  //let keys = Object.keys(result);
+  //console.log(`keys1=${JSON.stringify(keys)}`);
   return result;
 }
 
@@ -203,27 +205,22 @@ export function ast2oml(ast) {
       if (i > 0) result += " ";
       result += ast2oml(ast[i]);
     }
-    //result += ")";
-    
     let keys = Object.keys(ast);
     console.log(`keys=${JSON.stringify(keys)}`);
     let re = /^[0-9]+/;
     keys = keys.filter(key => !re.test(key));
     keys.sort();
     if (keys.length > 0) {
-      //if (ast.length > 0) result += " ";
-      result += " ?";
       for (let i=0; i<keys.length; i++) {
         let key = keys[i];
-        result += " (";
+        result += " ?";
+        result += " ";
         result += JSON.stringify(key);
         result += " ";
         result += ast2oml(ast[key]);
-        result += ")";
       }
     }
     result += " )";
-    
     return result;
   } else {
     let result = "(struct";

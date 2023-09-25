@@ -71,7 +71,8 @@ function compile_ast(ast) {
         return compile_ast([common.id("list"), ...ast]);
     }
     if (!common.is_callable(ast)) {
-        return compile_ast([common.id("list"), ...ast]);
+        //return compile_ast([common.id("list"), ...ast]);
+        return ast;
     }
     switch (common.to_id(ast[0])) {
         case "@": {
