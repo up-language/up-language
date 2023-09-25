@@ -500,11 +500,19 @@ export function omljs() {
                 var tm2 = new Date().getTime();
                 if (true /*debug*/) {
                     if (output === "undefined") {
-                        console.log("==> (" + (tm2 - tm1) + " ms)");
-                        console.log(val);
+                        if (debug) {
+                            console.log("==> (" + (tm2 - tm1) + " ms)");
+                            console.log(val);
+                        } else {
+                            console.log(val);
+                        }
                     }
                     else {
-                        console.log("==> " + output + " (" + (tm2 - tm1) + " ms)");
+                        if (debug) {
+                            console.log("==> " + output + " (" + (tm2 - tm1) + " ms)");
+                        } else {
+                            console.log("==> " + output);
+                        }
                     }
                 }
             }
