@@ -173,3 +173,17 @@ Deno.test("01_test #17", () => {
     result = ast2oml(result);
     asst.assertEquals(result, `(list 20 10)`);
 });
+
+Deno.test("01_test #18", () => {
+    let result = run(`
+        (define x 10)
+        (define y 20)
+        (do*
+            [(count 0 @count+1@)
+             (x globalThis.y)
+             (y x)]
+            [(= count 0) (list x y)]
+        `);
+    result = ast2oml(result);
+    asst.assertEquals(result, `(list 20 20)`);
+});
