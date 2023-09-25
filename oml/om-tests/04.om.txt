@@ -14,8 +14,7 @@
 4
 ==> null
  [OML] (define lst (list 10 20 30))
-keys=["0","1","2"]
-==> (10 20 30 )
+==> (list 10 20 30)
  [OML] (dolist lst (print $item))
 10
 20
