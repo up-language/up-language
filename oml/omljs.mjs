@@ -160,18 +160,24 @@ function compile_ast(ast) {
         }
         case "dotimes": {
             let ast1 = ast[1];
-            if (common.is_variable(ast1) || !common.is_array(ast1) || common.is_quoted(ast1))
-                ast1 = [common.id("$index"), ast1];
+            //if (common.is_variable(ast1) || !common.is_array(ast1) || common.is_quoted(ast1))
+            //    ast1 = [common.id("$index"), ast1];
+            if (common.is_variable(ast1))
+                ast1 = [ast1, ast1];
             else if (ast1.length < 2)
                 throw new Error("syntax error");
             let result_exp = ast1.length < 3 ? common.id("null") : ast1[2];
             let bind = [
                 [common.id("__dotimes_cnt__"), ast1[1]],
                 [common.id("__dotimes_idx__"), 0, [common.id("+"), common.id("__dotimes_idx__"), 1]],
-                [ast1[0], common.id("__dotimes_idx__"), common.id("__dotimes_idx__")],
+                //[ast1[0], common.id("__dotimes_idx__"), common.id("__dotimes_idx__")],
+                //[ast1[0], 0, [common.id("+"), ast1[0], 1]],
             ];
             let exit = [[common.id(">="), common.id("__dotimes_idx__"), common.id("__dotimes_cnt__")], result_exp];
-            ast = [common.id("do*"), bind, exit].concat(ast.slice(2));
+            //let exit = [[common.id(">="), ast1[0], common.id("__dotimes_cnt__")], result_exp];
+            let body = [["@", `${common.to_id(ast1[0])}=__dotimes_idx__`], ...ast.slice(2)];
+            //ast = [common.id("do*"), bind, exit].concat(ast.slice(2));
+            ast = [common.id("do*"), bind, exit].concat(body);
             return compile_ast(ast);
         }
         case "length": {
@@ -188,8 +194,10 @@ function compile_ast(ast) {
         }
         case "dolist": {
             let ast1 = ast[1];
-            if (common.is_variable(ast1) || !common.is_array(ast1) || common.is_quoted(ast1))
-                ast1 = [common.id("$item"), ast1];
+            //if (common.is_variable(ast1) || !common.is_array(ast1) || common.is_quoted(ast1))
+            //    ast1 = [common.id("$item"), ast1];
+            if (common.is_variable(ast1))
+                ast1 = [ast1, ast1];
             else if (ast1.length < 2)
                 throw new Error("syntax error");
             let result_exp = ast1.length < 3 ? common.id("null") : ast1[2];
@@ -197,10 +205,11 @@ function compile_ast(ast) {
                 [common.id("__dolist_list__"), ast1[1]],
                 [common.id("__dolist_cnt__"), [common.id("length"), common.id("__dolist_list__")]],
                 [common.id("__dolist_idx__"), 0, [common.id("+"), common.id("__dolist_idx__"), 1]],
-                [ast1[0], [common.id("prop-get"), common.id("__dolist_list__"), common.id("__dolist_idx__")], [common.id("prop-get"), common.id("__dolist_list__"), common.id("__dolist_idx__")]],
+                //[ast1[0], [common.id("prop-get"), common.id("__dolist_list__"), common.id("__dolist_idx__")], [common.id("prop-get"), common.id("__dolist_list__"), common.id("__dolist_idx__")]],
             ];
             let exit = [[common.id(">="), common.id("__dolist_idx__"), common.id("__dolist_cnt__")], result_exp];
-            ast = [common.id("do*"), bind, exit].concat(ast.slice(2));
+            let body = [["@", `${common.to_id(ast1[0])}=__dolist_list__[__dolist_idx__]`], ...ast.slice(2)];
+            ast = [common.id("do*"), bind, exit].concat(body);
             return compile_ast(ast);
         }
         case "if":

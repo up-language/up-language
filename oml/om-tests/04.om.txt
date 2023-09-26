@@ -1,12 +1,7 @@
 [ "04.om" ]
- [OML] (dotimes 3 (print $index))
-0
-1
-2
-==> null
  [OML] (define count 5)
 ==> 5
- [OML] (dotimes count (print $index))
+ [OML] (dotimes count (print count))
 0
 1
 2
@@ -15,13 +10,8 @@
 ==> null
  [OML] (define lst (list 10 20 30))
 ==> (list 10 20 30)
- [OML] (dolist lst (print $item))
+ [OML] (dolist lst (print lst))
 10
 20
 30
-==> null
- [OML] (dolist '(100 200 300) (print $item))
-100
-200
-300
 ==> null
