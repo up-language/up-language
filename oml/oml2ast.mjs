@@ -241,7 +241,7 @@ export function ast2oml(ast) {
     keys = keys.filter(key => !re.test(key));
     keys.sort();
     if (keys.length > 0) {
-      if (ast.length > 0) result += " ";
+      if (result.length > 1) result += " ";
       result += "?";
       for (let i=0; i<keys.length; i++) {
         let key = keys[i];

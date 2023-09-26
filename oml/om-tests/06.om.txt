@@ -1,0 +1,5 @@
+[ "06.om" ]
+ [OML] (struct :a 123 :b 456)
+==> (struct "a" 123 "b" 456)
+ [OML] (list ? (:a 123) (:b 456) :c)
+==> (list ? ("a" 123) ("b" 456) ("c" true))
