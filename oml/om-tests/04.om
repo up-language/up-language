@@ -7,3 +7,18 @@
 (dolist lst
  (print lst)
  .
+
+
+(define person
+    (struct
+     "name" "john"
+     "age"  23
+     "hobbies" (list "tennis" "baseball").
+(define count 0)
+(dolist (x person.hobbies)
+(print x)
+ [set! count (+ 1 count .
+(print count)
+
+(dotimes (x 5)
+ (print x .

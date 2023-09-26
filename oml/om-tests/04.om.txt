@@ -15,3 +15,21 @@
 20
 30
 ==> null
+ [OML] (define person (struct "name" "john" "age" 23 "hobbies" (list "tennis" "baseball")))
+==> (struct "age" 23 "hobbies" (list "tennis" "baseball") "name" "john")
+ [OML] (define count 0)
+==> 0
+ [OML] (dolist (x person.hobbies) (print x) (set! count (+ 1 count)))
+"tennis"
+"baseball"
+==> null
+ [OML] (print count)
+2
+==> 2
+ [OML] (dotimes (x 5) (print x))
+0
+1
+2
+3
+4
+==> null

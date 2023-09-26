@@ -159,9 +159,8 @@ function compile_ast(ast) {
             return "function" + args + "{return " + compile_body(ast, 2) + "}";
         }
         case "dotimes": {
+            /*
             let ast1 = ast[1];
-            //if (common.is_variable(ast1) || !common.is_array(ast1) || common.is_quoted(ast1))
-            //    ast1 = [common.id("$index"), ast1];
             if (common.is_variable(ast1))
                 ast1 = [ast1, ast1];
             else if (ast1.length < 2)
@@ -179,6 +178,24 @@ function compile_ast(ast) {
             //ast = [common.id("do*"), bind, exit].concat(ast.slice(2));
             ast = [common.id("do*"), bind, exit].concat(body);
             return compile_ast(ast);
+            */
+            let ast1 = ast[1];
+            if (common.is_variable(ast1))
+                ast1 = [ast1, ast1];
+            else if (ast1.length < 2)
+                throw new Error("syntax error");
+            let result_exp = ast1.length < 3 ? common.id("null") : ast1[2];
+           ast = [common.id("begin"),
+             [common.id("define"), common.id("__dotimes_cnt__"), ast1[1]],
+             [common.id("define"), common.id("__dotimes_idx__"), -1],
+             [common.id("define"), ast1[0], null],
+             [common.id("while"), ["@", "(__dotimes_idx__ + 1) < __dotimes_cnt__"],
+             [common.id("set!"), common.id("__dotimes_idx__"), ["@", "__dotimes_idx__ + 1"]],
+             [common.id("set!"), ast1[0], common.id("__dotimes_idx__")],
+             ...ast.slice(2)
+             ]
+           ];
+           return compile_ast(ast);
         }
         case "length": {
             if (ast.length != 2) return new Error("syntax error");
@@ -194,23 +211,23 @@ function compile_ast(ast) {
         }
         case "dolist": {
             let ast1 = ast[1];
-            //if (common.is_variable(ast1) || !common.is_array(ast1) || common.is_quoted(ast1))
-            //    ast1 = [common.id("$item"), ast1];
             if (common.is_variable(ast1))
                 ast1 = [ast1, ast1];
             else if (ast1.length < 2)
                 throw new Error("syntax error");
             let result_exp = ast1.length < 3 ? common.id("null") : ast1[2];
-            let bind = [
-                [common.id("__dolist_list__"), ast1[1]],
-                [common.id("__dolist_cnt__"), [common.id("length"), common.id("__dolist_list__")]],
-                [common.id("__dolist_idx__"), 0, [common.id("+"), common.id("__dolist_idx__"), 1]],
-                //[ast1[0], [common.id("prop-get"), common.id("__dolist_list__"), common.id("__dolist_idx__")], [common.id("prop-get"), common.id("__dolist_list__"), common.id("__dolist_idx__")]],
-            ];
-            let exit = [[common.id(">="), common.id("__dolist_idx__"), common.id("__dolist_cnt__")], result_exp];
-            let body = [["@", `${common.to_id(ast1[0])}=__dolist_list__[__dolist_idx__]`], ...ast.slice(2)];
-            ast = [common.id("do*"), bind, exit].concat(body);
-            return compile_ast(ast);
+           ast = [common.id("begin"),
+             [common.id("define"), common.id("__dolist_list__"), ast1[1]],
+             [common.id("define"), common.id("__dolist_cnt__"), [common.id("length"), common.id("__dolist_list__")]],
+             [common.id("define"), common.id("__dolist_idx__"), -1],
+             [common.id("define"), ast1[0], null],
+             [common.id("while"), ["@", "(__dolist_idx__ + 1) < __dolist_cnt__"],
+               [common.id("set!"), common.id("__dolist_idx__"), ["@", "__dolist_idx__ + 1"]],
+               [common.id("set!"), ast1[0], ["@", "__dolist_list__[__dolist_idx__]"]],
+               ...ast.slice(2)
+             ]
+           ];
+           return compile_ast(ast);
         }
         case "if":
             return ("(" +
