@@ -4,10 +4,14 @@
  .
 
 (define lst (list 10 20 30))
-(dolist lst
- (print lst)
- .
+(print (dolist lst
+ (print lst .
 
+(define lst (list 10 20 30))
+(define result 0)
+(dolist (lst lst result)
+ (print lst)
+ (set! result @result + lst@ .
 
 (define person
     (struct
@@ -20,5 +24,7 @@
  [set! count (+ 1 count .
 (print count)
 
-(dotimes (x 5)
- (print x .
+(define result 0)
+(dotimes (x 5 result)
+ (print x)
+ (set! result @result + 10@ .

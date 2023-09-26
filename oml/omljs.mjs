@@ -193,7 +193,8 @@ function compile_ast(ast) {
              [common.id("set!"), common.id("__dotimes_idx__"), ["@", "__dotimes_idx__ + 1"]],
              [common.id("set!"), ast1[0], common.id("__dotimes_idx__")],
              ...ast.slice(2)
-             ]
+             ],
+             result_exp
            ];
            return compile_ast(ast);
         }
@@ -225,7 +226,8 @@ function compile_ast(ast) {
                [common.id("set!"), common.id("__dolist_idx__"), ["@", "__dolist_idx__ + 1"]],
                [common.id("set!"), ast1[0], ["@", "__dolist_list__[__dolist_idx__]"]],
                ...ast.slice(2)
-             ]
+             ],
+             result_exp
            ];
            return compile_ast(ast);
         }
