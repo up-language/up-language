@@ -71,6 +71,32 @@ export function tokenize2(src) {
             i = j;
             continue;
         }
+        if (ch === "'") {
+            if (token !== undefined) {
+                push_token(result, token);
+                token = undefined;
+            }
+            let s = "";
+            let found = false;
+            let j = i + 1;
+            for (; j < src.length; j++) {
+                ch = src[j];
+                if (ch === "'" && src[j + 1] === "'") {
+                    s += "''";
+                    j++;
+                    continue;
+                }
+                if (ch === "'") {
+                    found = true;
+                    break;
+                }
+                s += ch;
+            }
+            if (!found) throw new Error("Unmatched \"'\"");
+            push_token(result, "'" + s + "'");
+            i = j;
+            continue;
+        }
         if (ch === "@") {
             if (token !== undefined) {
                 push_token(result, token);
