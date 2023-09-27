@@ -16,7 +16,8 @@ function tokenize(str) {
 
 function tokenize(str) {
   //console.log(`str.length=${str.length}`);
-  let re = /[\s,]*(['()\[\]]|{[^}]*}|"(?:\\.|[^\\"])*"|@(?:@@|[^@])*@|`(?:``|[^`])*`|;.*|#.*|[^\s,()\[\]'"`;@{]*)/g;
+  //let re = /[\s,]*(['()\[\]]|{[^}]*}|"(?:\\.|[^\\"])*"|@(?:@@|[^@])*@|`(?:``|[^`])*`|;.*|#.*|[^\s,()\[\]'"`;@{]*)/g;
+  let re = /[\s,]*([()\[\]]|{[^}]*}|"(?:\\.|[^\\"])*"|@(?:@@|[^@])*@|'(?:''|[^'])*'|`(?:``|[^`])*`|;.*|#.*|[^\s,()\[\]'"`;@{]*)/g;
   let lastIndex = -1;
   let result = [];
   const matches = str.matchAll(re);
@@ -137,9 +138,9 @@ function read_sexp(code, exp) {
   }
   let ch = token[0];
   switch (ch) {
-    case "'":
-      let ast = read_sexp(code, exp);
-      return ["`", ast];
+    //case "'":
+    //  let ast = read_sexp(code, exp);
+    //  return ["`", ast];
     case "(":
     case "[":
       let lst = read_list(code, exp, ch);
@@ -147,19 +148,14 @@ function read_sexp(code, exp) {
     case ")":
     case "]":
     case ".":
-    //case "?":
         return ch;
-    //case "{":
-    //  return read_struct(code, exp);
-    //case "}":
-    //  return ch;
     case '"':
       token = JSON.parse(token);
       return token;
-    //case "'":
-    //  token = token.replace(/(^'|'$)/g, "");
-    //  token = token.replace(/('')/g, "'");
-    //  return token;
+    case "'":
+      token = token.replace(/(^'|'$)/g, "");
+      token = token.replace(/('')/g, "'");
+      return token;
     case "`":
       token = token.replace(/(^`|`$)/g, "");
       token = token.replace(/(``)/g, "${'`'}");
