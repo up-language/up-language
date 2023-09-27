@@ -67,7 +67,7 @@ function compile_ast(ast) {
     if (common.is_script(ast)) {
         return ast[1];
     }
-    if (common.is_id(ast[0]) && common.to_id(ast[0])==="?") {
+    if (common.is_id(ast[0]) && common.to_id(ast[0]) === "?") {
         return compile_ast([common.id("list"), ...ast]);
     }
     if (!common.is_callable(ast)) {
@@ -89,12 +89,12 @@ function compile_ast(ast) {
             return compile_body(ast, 1);
         case "case": {
             let cond_ast = [common.id("cond")];
-            for (let i=2; i<ast.length; i++) {
+            for (let i = 2; i < ast.length; i++) {
                 let e = ast[i];
                 if (common.is_id(e[0], "else") || common.is_id(e[0], "otherwise")) {
                     cond_ast.push(e);
                 } else {
-                    cond_ast.push([[common.id("equal"), common.id("__case__"), e[0]],...e.slice(1)]);
+                    cond_ast.push([[common.id("equal"), common.id("__case__"), e[0]], ...e.slice(1)]);
                 }
             }
             //return compile_ast([common.id("let*"), [[common.id("__case__"), ast[1]]], cond_ast]);
@@ -185,18 +185,18 @@ function compile_ast(ast) {
             else if (ast1.length < 2)
                 throw new Error("syntax error");
             let result_exp = ast1.length < 3 ? common.id("null") : ast1[2];
-           ast = [common.id("begin"),
-             [common.id("define"), common.id("__dotimes_cnt__"), ast1[1]],
-             [common.id("define"), common.id("__dotimes_idx__"), -1],
-             [common.id("define"), ast1[0], null],
-             [common.id("while"), ["@", "(__dotimes_idx__ + 1) < __dotimes_cnt__"],
-             [common.id("set!"), common.id("__dotimes_idx__"), ["@", "__dotimes_idx__ + 1"]],
-             [common.id("set!"), ast1[0], common.id("__dotimes_idx__")],
-             ...ast.slice(2)
-             ],
-             result_exp
-           ];
-           return compile_ast(ast);
+            ast = [common.id("begin"),
+            [common.id("define"), common.id("__dotimes_cnt__"), ast1[1]],
+            [common.id("define"), common.id("__dotimes_idx__"), -1],
+            [common.id("define"), ast1[0], null],
+            [common.id("while"), ["@", "(__dotimes_idx__ + 1) < __dotimes_cnt__"],
+            [common.id("set!"), common.id("__dotimes_idx__"), ["@", "__dotimes_idx__ + 1"]],
+            [common.id("set!"), ast1[0], common.id("__dotimes_idx__")],
+            ...ast.slice(2)
+            ],
+                result_exp
+            ];
+            return compile_ast(ast);
         }
         case "length": {
             if (ast.length != 2) return new Error("syntax error");
@@ -217,19 +217,19 @@ function compile_ast(ast) {
             else if (ast1.length < 2)
                 throw new Error("syntax error");
             let result_exp = ast1.length < 3 ? common.id("null") : ast1[2];
-           ast = [common.id("begin"),
-             [common.id("define"), common.id("__dolist_list__"), ast1[1]],
-             [common.id("define"), common.id("__dolist_cnt__"), [common.id("length"), common.id("__dolist_list__")]],
-             [common.id("define"), common.id("__dolist_idx__"), -1],
-             [common.id("define"), ast1[0], null],
-             [common.id("while"), ["@", "(__dolist_idx__ + 1) < __dolist_cnt__"],
-               [common.id("set!"), common.id("__dolist_idx__"), ["@", "__dolist_idx__ + 1"]],
-               [common.id("set!"), ast1[0], ["@", "__dolist_list__[__dolist_idx__]"]],
-               ...ast.slice(2)
-             ],
-             result_exp
-           ];
-           return compile_ast(ast);
+            ast = [common.id("begin"),
+            [common.id("define"), common.id("__dolist_list__"), ast1[1]],
+            [common.id("define"), common.id("__dolist_cnt__"), [common.id("length"), common.id("__dolist_list__")]],
+            [common.id("define"), common.id("__dolist_idx__"), -1],
+            [common.id("define"), ast1[0], null],
+            [common.id("while"), ["@", "(__dolist_idx__ + 1) < __dolist_cnt__"],
+            [common.id("set!"), common.id("__dolist_idx__"), ["@", "__dolist_idx__ + 1"]],
+            [common.id("set!"), ast1[0], ["@", "__dolist_list__[__dolist_idx__]"]],
+            ...ast.slice(2)
+            ],
+                result_exp
+            ];
+            return compile_ast(ast);
         }
         case "if":
             return ("(" +
@@ -489,7 +489,21 @@ export function omljs() {
     glob.exec_d = (exp) => glob.exec(exp, true);
     glob.exec = (exp, debug) => {
         let src = exp;
-        let steps = oml2ast(src);
+
+        let steps;
+        try {
+            steps = oml2ast(src);
+        } catch (e) {
+            console.log("[EXCEPTION]");
+            if (debug && e.stack) {
+                console.log(e.stack);
+                throw e;
+            }
+            else {
+                console.log(e.name + ": " + e.message);
+                Deno.exit(1);
+            }
+        }
         let last;
         let text = "";
         for (let step of steps) {
@@ -558,11 +572,14 @@ export function omljs() {
                 if (!debug)
                     console.log("[CODE] " + text);
                 console.log("[EXCEPTION]");
-                if (e.stack)
+                if (debug && e.stack) {
                     console.log(e.stack);
-                else
-                    console.log(e);
-                throw e;
+                    throw e;
+                }
+                else {
+                    console.log(e.name + ": " + e.message);
+                    Deno.exit(1);
+                }
                 break;
             }
         }
@@ -574,11 +591,14 @@ export function omljs() {
         try {
             return eval(text);
         } catch (e) {
-            if (e.stack)
+            if (debug && e.stack) {
                 console.log(e.stack);
-            else
-                console.log(e);
-            throw e;
+                throw e;
+            }
+            else {
+                console.log(e.name + ": " + e.message);
+                Deno.exit(1);
+            }
         }
     };
     glob.runAll = (exp) => {

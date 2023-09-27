@@ -16,7 +16,7 @@ import { oml2ast } from "../oml2ast.mjs";
 let dat = Deno.readTextFileSync(Deno.args[0]);
 //console.log(dat);
 
-let ast = oml2ast(dat);
+//let ast = oml2ast(dat);
 //console.log(ast);
 
 let result = exec(dat);
