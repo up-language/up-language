@@ -1,23 +1,9 @@
-/*
-function tokenize(str) {
-  let re = /[\s,]*(['()\[\]]|{[^}]*}|"(?:\\.|[^\\"])*"|@(?:@@|[^@])*@|`(?:``|[^`])*`|;.*|#.*|[^\s,()\[\]'"`;@{]*)/g;
-  let result = [];
-  let token;
-  while ((token = re.exec(str)[1]) !== "") {
-    if (token[0] === ";") continue;
-    if (token[0] === "#") continue;
-    if (token[0] === "{") continue;
-    if (isFinite(token)) token = parseFloat(token, 10);
-    result.push(token);
-  }
-  return result;
-}
-*/
+import { tokenize2 } from "./tokenize2.mjs";
 
 export function tokenize(str) {
   //console.log(`str.length=${str.length}`);
-  //let re = /[\s,]*(['()\[\]]|{[^}]*}|"(?:\\.|[^\\"])*"|@(?:@@|[^@])*@|`(?:``|[^`])*`|;.*|#.*|[^\s,()\[\]'"`;@{]*)/g;
-  let re = /[\s,]*([()\[\]]|{[^}]*}|"(?:\\.|[^\\"])*"|@(?:@@|[^@])*@|'(?:''|[^'])*'|`(?:``|[^`])*`|;.*|#.*|[^\s,()\[\]'"`;@{]*)/g;
+  //let re = /[\s,]*([()\[\]]|{[^}]*}|"(?:\\.|[^\\"])*"|@(?:@@|[^@])*@|'(?:''|[^'])*'|`(?:``|[^`])*`|;.*|#.*|[^\s,()\[\]'"`;@{]*)/g;
+  let re = /[\s,]*([()\[\]]|{[^}]*}|@(?:@@|[^@])*@|'(?:''|[^'])*'|"(?:""|[^"])*"|`(?:``|[^`])*`|;.*|#.*|[^\s,()\[\]'"`;@{]*)/g;
   let lastIndex = -1;
   let result = [];
   const matches = str.matchAll(re);
@@ -149,12 +135,16 @@ function read_sexp(code, exp) {
     case "]":
     case ".":
         return ch;
-    case '"':
-      token = JSON.parse(token);
-      return token;
+    //case '"':
+    //  token = JSON.parse(token);
+    //  return token;
     case "'":
       token = token.replace(/(^'|'$)/g, "");
       token = token.replace(/('')/g, "'");
+      return token;
+    case "\"":
+      token = token.replace(/(^"|"$)/g, "");
+      token = token.replace(/("")/g, "\"");
       return token;
     case "`":
       token = token.replace(/(^`|`$)/g, "");
@@ -206,7 +196,8 @@ function join_sexp(exp) {
 }
 
 export function oml2ast(text) {
-  let code = tokenize(text);
+  //let code = tokenize(text);
+  let code = tokenize2(text);
   let result = [];
   while (true) {
     let exp = [];

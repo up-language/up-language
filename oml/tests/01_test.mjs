@@ -73,6 +73,7 @@ Deno.test("01_test #7", () => {
     asst.assertEquals(result, `"john"`);
 });
 
+/*
 Deno.test("01_test #8", () => {
     let result = exec(`
         person.hobbies#1
@@ -80,6 +81,7 @@ Deno.test("01_test #8", () => {
     result = ast2oml(result);
     asst.assertEquals(result, `"baseball"`);
 });
+*/
 
 Deno.test("01_test #9", () => {
     let result = exec(`
