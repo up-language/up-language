@@ -1,0 +1,2 @@
+[ "01.om" ]
+["(","do","[","(","count",1,"@count+1@",")","]","[","@count>3@","count","]","(","console.log","`count=${count}`",")",")"]
