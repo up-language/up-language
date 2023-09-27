@@ -46,7 +46,7 @@ exec(`
     (struct
      "name" "john"
      "age"  23
-     "hobbies" (list "tennis" "baseball").`
+     "hobbies" (list "tennis" "baseball")\\`
 );
 
 Deno.test("01_test #5", () => {

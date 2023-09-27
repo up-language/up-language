@@ -1,30 +1,30 @@
 (define count 5)
 (dotimes count
  (print count)
- .
+ \
 
 (define lst (list 10 20 30))
 (print (dolist lst
- (print lst .
+ (print lst \
 
 (define lst (list 10 20 30))
 (define result 0)
 (dolist (lst lst result)
  (print lst)
- (set! result @result + lst@ .
+ (set! result @result + lst@ \
 
 (define person
     (struct
      "name" "john"
      "age"  23
-     "hobbies" (list "tennis" "baseball").
+     "hobbies" (list "tennis" "baseball")\
 (define count 0)
 (dolist (x person.hobbies)
 (print x)
- [set! count (+ 1 count .
+ [set! count (+ 1 count \
 (print count)
 
 (define result 0)
 (dotimes (x 5 result)
  (print x)
- (set! result @result + 10@ .
+ (set! result @result + 10@ \

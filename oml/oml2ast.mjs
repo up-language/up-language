@@ -42,8 +42,8 @@ function read_list(code, exp, ch) {
   let result = [];
   let ast;
   while ((ast = read_sexp(code, exp, false)) !== undefined) {
-    if (ast === ".") {
-      code.unshift(".");
+    if (ast === /*"."*/"\\") {
+      code.unshift(/*"."*/"\\");
       break;
     } else if (ast === "]") {
         if (ch !== "[") code.unshift("]");
@@ -133,7 +133,7 @@ function read_sexp(code, exp) {
       return lst;
     case ")":
     case "]":
-    case ".":
+    case /*"."*/"\\":
         return ch;
     //case '"':
     //  token = JSON.parse(token);
@@ -165,7 +165,7 @@ function read_sexp(code, exp) {
 }
 
 function join_sexp_convert(token) {
-  if (token === ".") token = ")";
+  if (token === /*"."*/"\\") token = ")";
   if (token === "[") token = "(";
   if (token === "]") token = ")";
   return token;
@@ -179,14 +179,14 @@ function join_sexp(exp) {
   while (exp.length > 0) {
     let token = exp.shift();
     if (
-      token !== "." &&
+      token !== /*"."*/"\\" &&
       token !== ")" &&
       token !== "]" &&
       (last !== "(") & (last !== "[") &&
       last !== "'"
     )
       result += " ";
-    //if (token === ".") token = ")";
+    //if (token === /*"."*/"\\") token = ")";
     //if (token === "[") token = "(";
     //if (token === "]") token = ")";
     result += join_sexp_convert(token);
@@ -203,7 +203,7 @@ export function oml2ast(text) {
     let exp = [];
     let ast = read_sexp(code, exp);
     if (ast === undefined) break;
-    if (ast === ".") continue;
+    if (ast === /*"."*/"\\") continue;
     if (ast === ")") continue;
     if (ast === "]") continue;
     result.push([join_sexp(exp), ast]);

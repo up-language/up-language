@@ -10,6 +10,7 @@ function is_special(ch) {
         case "]": return true;
         //case ".": return true;
         case "?": return true;
+        case "\\": return true;
     }
     return false;
 }
