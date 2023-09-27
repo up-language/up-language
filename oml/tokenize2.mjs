@@ -38,7 +38,7 @@ export function tokenize2(src) {
             result.push(ch);
             continue;
         }
-        if (ch === "#") {
+        if (ch === "#" || ch === ";") {
             if (token !== undefined) {
                 push_token(result, token);
                 token = undefined;
@@ -47,10 +47,79 @@ export function tokenize2(src) {
             for (; j < src.length; j++) {
                 ch = src[j];
                 if (ch === "\n") {
-                    //j++;
                     break;
                 }
             }
+            i = j;
+            continue;
+        }
+        if (ch === "{") {
+            if (token !== undefined) {
+                push_token(result, token);
+                token = undefined;
+            }
+            let found = false;
+            let j = i;
+            for (; j < src.length; j++) {
+                ch = src[j];
+                if (ch === "}") {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) throw new Error("Unmatched '{'");
+            i = j;
+            continue;
+        }
+        if (ch === "@") {
+            if (token !== undefined) {
+                push_token(result, token);
+                token = undefined;
+            }
+            let s = "";
+            let found = false;
+            let j = i + 1;
+            for (; j < src.length; j++) {
+                ch = src[j];
+                if (ch === "@" && src[j + 1] === "@") {
+                    s += "@";
+                    j++;
+                    continue;
+                }
+                if (ch === "@") {
+                    found = true;
+                    break;
+                }
+                s += ch;
+            }
+            if (!found) throw new Error("Unmatched '@'");
+            push_token(result, "@" + s + "@");
+            i = j;
+            continue;
+        }
+        if (ch === "`") {
+            if (token !== undefined) {
+                push_token(result, token);
+                token = undefined;
+            }
+            let s = "";
+            let found = false;
+            let j = i + 1;
+            for (; j < src.length; j++) {
+                ch = src[j];
+                if (ch === "`" && src[j + 1] === "`") {
+                    s += "${'`'}";
+                    j++;
+                    continue;
+                }
+                if (ch === "`") {
+                    found = true;
+                    break;
+                }
+                s += ch;
+            }
+            if (!found) throw new Error("Unmatched '`'");
+            push_token(result, "`" + s + "`");
             i = j;
             continue;
         }
