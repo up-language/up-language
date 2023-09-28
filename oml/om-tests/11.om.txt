@@ -1,0 +1,19 @@
+[ "11.om" ]
+ [OML] (define countA 4)
+==> 4
+ [OML] (define countB 3)
+==> 3
+ [OML] (dotimes countA (dotimes countB (print (list countA countB))))
+(list 0 0)
+(list 0 1)
+(list 0 2)
+(list 1 0)
+(list 1 1)
+(list 1 2)
+(list 2 0)
+(list 2 1)
+(list 2 2)
+(list 3 0)
+(list 3 1)
+(list 3 2)
+==> null

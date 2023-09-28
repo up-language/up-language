@@ -1,0 +1,5 @@
+(define countA 4)
+(define countB 3)
+(dotimes countA
+ (dotimes countB
+ (print (list countA countB\
