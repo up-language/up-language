@@ -1,5 +1,6 @@
 import { tokenize2 } from "./tokenize2.mjs";
 
+/*
 export function tokenize(str) {
   //console.log(`str.length=${str.length}`);
   //let re = /[\s,]*([()\[\]]|{[^}]*}|"(?:\\.|[^\\"])*"|@(?:@@|[^@])*@|'(?:''|[^'])*'|`(?:``|[^`])*`|;.*|#.*|[^\s,()\[\]'"`;@{]*)/g;
@@ -8,13 +9,6 @@ export function tokenize(str) {
   let result = [];
   const matches = str.matchAll(re);
   for (const match of matches) {
-    /*
-    console.log(
-      `Found ${match[0]} start=${match.index} end=${
-        match.index + match[0].length
-      }.`,
-    );
-    */
     lastIndex = match.index + match[0].length;
     let token = match[1];
     if (token === "") continue;
@@ -29,6 +23,7 @@ export function tokenize(str) {
   if (lastIndex !== str.length) throw "Could not parse entire text.";
   return result;
 }
+*/
 
 function read_token(code, exp) {
   if (code.length === 0) return undefined;
