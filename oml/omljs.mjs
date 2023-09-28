@@ -629,18 +629,18 @@ export function runAll(exp) {
 
 globalThis.ast2oml = ast2oml;
 
-function print(x) {
+export function print(x) {
     console.log(ast2oml(x));
     return x;
 };
-globalThis.print = print;
+//globalThis.print = print;
 
-function number_value(x) {
+export function number_value(x) {
     return typeof x !== "number" ? 0 : x;
 }
-globalThis.number_value = number_value;
+//globalThis.number_value = number_value;
 
-function equal(a, b) {
+export function equal(a, b) {
     return astequal(a, b);
 }
-globalThis.equal = equal;
+//globalThis.equal = equal;
