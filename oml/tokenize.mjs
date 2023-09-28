@@ -20,8 +20,7 @@ function push_token(result, token) {
     result.push(token);
 }
 
-export function tokenize2(src) {
-    //return ['a', 'b', 'c'];
+export function tokenize(src) {
     let result = [];
     let token = undefined;
     for (let i = 0; i < src.length; i++) {

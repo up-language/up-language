@@ -1,34 +1,8 @@
-import { tokenize2 } from "./tokenize2.mjs";
-
-/*
-export function tokenize(str) {
-  //console.log(`str.length=${str.length}`);
-  //let re = /[\s,]*([()\[\]]|{[^}]*}|"(?:\\.|[^\\"])*"|@(?:@@|[^@])*@|'(?:''|[^'])*'|`(?:``|[^`])*`|;.*|#.*|[^\s,()\[\]'"`;@{]*)/g;
-  let re = /[\s,]*([()\[\]]|{[^}]*}|@(?:@@|[^@])*@|'(?:''|[^'])*'|"(?:""|[^"])*"|`(?:``|[^`])*`|;.*|#.*|[^\s,()\[\]'"`;@{]*)/g;
-  let lastIndex = -1;
-  let result = [];
-  const matches = str.matchAll(re);
-  for (const match of matches) {
-    lastIndex = match.index + match[0].length;
-    let token = match[1];
-    if (token === "") continue;
-    if (token === '\r') continue;
-    if (token === '\n') continue;
-    if (token[0] === ";") continue;
-    if (token[0] === "#") continue;
-    if (token[0] === "{") continue;
-    if (isFinite(token)) token = parseFloat(token, 10);
-    result.push(token);
-  }
-  if (lastIndex !== str.length) throw "Could not parse entire text.";
-  return result;
-}
-*/
+import { tokenize } from "./tokenize.mjs";
 
 function read_token(code, exp) {
   if (code.length === 0) return undefined;
   let token = code.shift();
-  //if (typeof(token)==="string" && token.startsWith("{")) return read_token(code, exp);
   exp.push(token);
   return token;
 }
@@ -37,8 +11,8 @@ function read_list(code, exp, ch) {
   let result = [];
   let ast;
   while ((ast = read_sexp(code, exp, false)) !== undefined) {
-    if (ast === /*"."*/"\\") {
-      code.unshift(/*"."*/"\\");
+    if (ast === "\\") {
+      code.unshift("\\");
       break;
     } else if (ast === "]") {
         if (ch !== "[") code.unshift("]");
@@ -128,7 +102,7 @@ function read_sexp(code, exp) {
       return lst;
     case ")":
     case "]":
-    case /*"."*/"\\":
+    case "\\":
         return ch;
     //case '"':
     //  token = JSON.parse(token);
@@ -150,7 +124,6 @@ function read_sexp(code, exp) {
       token = token.replace(/(@@)/g, "@");
       return ["@", token];
     default: {
-      //if (token[0] === ":") return token;
       if (token[0] === ":") return token.substring(1);
       if (token[0] === "&") return token;
       let ids = split_ids(token);
@@ -160,30 +133,26 @@ function read_sexp(code, exp) {
 }
 
 function join_sexp_convert(token) {
-  if (token === /*"."*/"\\") token = ")";
+  if (token === "\\") token = ")";
   if (token === "[") token = "(";
   if (token === "]") token = ")";
   return token;
 }
 
 function join_sexp(exp) {
-  //console.log(exp);
   if (exp.length === 0) return "";
   let last = exp.shift();
   let result = "" + join_sexp_convert(last);
   while (exp.length > 0) {
     let token = exp.shift();
     if (
-      token !== /*"."*/"\\" &&
+      token !== "\\" &&
       token !== ")" &&
       token !== "]" &&
       (last !== "(") & (last !== "[") &&
       last !== "'"
     )
       result += " ";
-    //if (token === /*"."*/"\\") token = ")";
-    //if (token === "[") token = "(";
-    //if (token === "]") token = ")";
     result += join_sexp_convert(token);
     last = token;
   }
@@ -191,14 +160,14 @@ function join_sexp(exp) {
 }
 
 export function oml2ast(text) {
-  //let code = tokenize(text);
-  let code = tokenize2(text);
+  let code = tokenize(text);
+  //let code = tokenize2(text);
   let result = [];
   while (true) {
     let exp = [];
     let ast = read_sexp(code, exp);
     if (ast === undefined) break;
-    if (ast === /*"."*/"\\") continue;
+    if (ast === "\\") continue;
     if (ast === ")") continue;
     if (ast === "]") continue;
     result.push([join_sexp(exp), ast]);
