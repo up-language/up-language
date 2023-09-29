@@ -1,0 +1,13 @@
+[ "12.om" ]
+ [OML] @
+globalThis.add2 = function(a, b) {
+    return a + b;
+}
+@
+==> "function"
+ [OML] (add2 11 22)
+==> 33
+ [OML] (define add3 @function(a, b, c) { return a + b + c; }@)
+==> "function"
+ [OML] (add3 11 22 33)
+==> 66

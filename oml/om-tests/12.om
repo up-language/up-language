@@ -1,0 +1,13 @@
+@
+globalThis.add2 = function(a, b) {
+    return a + b;
+}
+@
+
+(add2 11 22)
+
+(define add3
+@function(a, b, c) { return a + b + c; }@
+\
+
+(add3 11 22 33)
